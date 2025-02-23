@@ -7,6 +7,7 @@
  * need to use are documented accordingly near the end.
  */
 import { initTRPC } from "@trpc/server";
+import EventEmitter from "events";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
@@ -50,6 +51,13 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
       },
     };
   },
+  sse: {
+    maxDurationMs: 5 * 60 * 1_000,
+    ping: {
+      enabled: true,
+      intervalMs: 3_000,
+    },
+  }
 });
 
 /**
