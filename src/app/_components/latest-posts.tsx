@@ -4,37 +4,41 @@ import { useState } from "react";
 
 import { api } from "~/trpc/react";
 
-export function LatestPost() {
-  const [latestPost] = api.post.getLatest.useSuspenseQuery();
+export function LatestPosts() {
+  const [latestPosts] = api.post.getLatest.useSuspenseQuery();
 
   const utils = api.useUtils();
-  const [name, setName] = useState("");
+  const [content, setContent] = useState("");
   const createPost = api.post.create.useMutation({
     onSuccess: async () => {
       await utils.post.invalidate();
-      setName("");
+      setContent("");
     },
   });
 
   return (
     <div className="w-full max-w-xs">
-      {latestPost ? (
-        <p className="truncate">Your most recent post: {latestPost.name}</p>
+      {latestPosts ? (
+        latestPosts.map((post) => (
+          <div key={post.id} className="bg-white/10 p-4 rounded-lg">
+            <p>{post.content}</p>
+          </div>
+        ))
       ) : (
-        <p>You have no posts yet.</p>
+        <p>There are no posts yet.</p>
       )}
-      <form
+      {/* <form
         onSubmit={(e) => {
           e.preventDefault();
-          createPost.mutate({ name });
+          createPost.mutate({ content });
         }}
         className="flex flex-col gap-2"
       >
         <input
           type="text"
           placeholder="Title"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
           className="w-full rounded-full px-4 py-2 text-black"
         />
         <button
@@ -44,7 +48,7 @@ export function LatestPost() {
         >
           {createPost.isPending ? "Submitting..." : "Submit"}
         </button>
-      </form>
+      </form> */}
     </div>
   );
 }

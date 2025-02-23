@@ -13,5 +13,7 @@ export const userRouter = createTRPCRouter({
                 name: generatedName
             }
         })
+
+        return user;
     }),
 })
